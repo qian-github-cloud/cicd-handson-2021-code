@@ -8,4 +8,4 @@ RUN go build -o ./server-run ./server
 
 EXPOSE 9090
 
-cmd ["/server-run"]
+cmd ["./server-run"]
