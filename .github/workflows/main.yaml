@@ -25,4 +25,4 @@ jobs:
                 password: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
             - name: Push image to GitHub
-              run: docker image push ghcr.io/qian-github-cloud/${{github.respository}}/go-image:${{github.run_number}} 
+              run: docker image push ghcr.io/qian-github-cloud/${{github.repository}}/go-image:${{github.run_number}} 
