@@ -1,12 +1,14 @@
+#build
 FROM golang:1.17.1 as builder
 
 WORKDIR /app
 
 COPY .  ./
 
-RUN go build -o ./server-run ./server
+RUN CGO_ENABLE=0 go build -o ./server-run ./server
 
-FROM gcr.io/distroless/base
+# deploy
+FROM scratch
 
 EXPOSE 9090
 
