@@ -1,18 +1,24 @@
-#build
-FROM golang:1.17.1 as builder
+# ベースイメージをbuilderイメージとして指定
+FROM golang:1.17 as builder
 
+# ワークディレクトリを指定
 WORKDIR /app
 
-COPY .  ./
+# ホストOSのapps内全てをWORKDIRにコピー
+COPY . ./
 
-RUN CGO_ENABLE=0 go build -o ./server-run ./server
+# [編集] ビルド
+RUN CGO_ENABLED=0 go build -o ./server-run ./server
 
-# deploy
+# [編集] scratchイメージを指定
 FROM scratch
 
+# コンテナのポートを9090で公開
 EXPOSE 9090
 
+# [追加] golang:1.16でビルドしたアプリケーションをコピー
 COPY --from=builder app/server-run /.
 COPY web /web
 
-cmd ["./server-run"]
+# アプリ実行
+CMD [ "./server-run" ]
