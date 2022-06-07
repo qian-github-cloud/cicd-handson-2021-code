@@ -46,3 +46,30 @@ jobs:
 
             - name: Push image to GitHub
               run: docker image push ghcr.io/${{github.repository}}/go-image:${{github.run_number}} 
+    create-pr-k8s-manifest:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+          with:
+            token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+            repo: qian-github-cloud/cicd-handson-2021-config
+        - name: Pull Request to Config Repository
+          run: |
+            echo -e "machine github.com\nlogin ${{secrets.USERNAME}}\npassword ${{secrets.PERSONAL_ACCESS_TOKEN}}" > ~/.netrc
+            git config --global user.name "{{secrets.USERNAME}}"
+            git config --global user.email "{{secrets.EMAIL}}"
+
+            git branch feature/${{github.run_number}}
+            git checkout feature/${{github.run_number}}
+
+            sed -i -e "s|image: ghcr.io/${{github.repository}}/go-image:.*|image: ghcr.io/${{github.repository}}/go-image:${{github.run_number}}|" manifests/goapp.yaml
+
+            git add manifests
+            git commit -m "Update tag ${{github.run_number}}"
+            git push origin feature/${{github.run_number}}
+
+            echo ${{secret.PERSONAL_ACCESS_TOKEN}} > token.txt
+            gh auth login --with-token < token.txt
+            gh pr create --title "Update Tag ${{github.run_number}}" --body "Please Merge !!"
