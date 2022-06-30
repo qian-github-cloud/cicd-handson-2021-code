@@ -64,7 +64,7 @@ jobs:
             git branch feature/${{github.run_number}}
             git checkout feature/${{github.run_number}}
 
-            sed -i -e "s|image: ghcr.io/${{github.repository}}/go-image:.*|image: ghcr.io/${{github.repository}}/go-image:${{github.run_number}}|" manifests/goapp.yaml
+            sed -i -e "s|image: ghcr.io/${{github.repository}}/go-image:.*|image: ghcr.io/${{github.repository}}/go-image:${{github.run_number}}|" development/manifests/goapp.yaml
 
             git add manifests
             git commit -m "Update tag ${{github.run_number}}"

@@ -84,7 +84,7 @@ func findCicdProjects(data []byte) ([]Project, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("test")
 	ml := getMemberList(l)
 	for _, category := range l.Landscape {
 		if category.Name == "App Definition and Development" {
